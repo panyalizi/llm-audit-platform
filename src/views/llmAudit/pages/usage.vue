@@ -278,7 +278,7 @@ export default {
       tabs: [
         { key: 'company', label: '公司级' },
         { key: 'business', label: '业务层统计' },
-        { key: 'provider', label: '技术层 · 大模型公司' },
+        { key: 'provider', label: '技术层 · 供应商' },
         { key: 'model', label: '技术层 · 模型' },
         { key: 'api', label: '技术层 · API' },
       ],

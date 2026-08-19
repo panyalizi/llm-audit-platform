@@ -13,7 +13,7 @@
         <div class="stat-card-foot up">较昨日 +6.1%</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">今日费用(¥)</div>
+        <div class="stat-card-label">今日预估费用(¥)</div>
         <div class="stat-card-value">{{ workbench.today.todayCost.toFixed(2) }}</div>
         <div class="stat-card-foot warn">已达日预算 59%</div>
       </div>

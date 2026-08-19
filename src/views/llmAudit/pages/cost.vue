@@ -94,7 +94,7 @@
 
     <div class="panel" v-else-if="costTab === 'provider'">
       <el-table :data="report.byProvider" stripe>
-        <el-table-column prop="name" label="大模型公司" min-width="130" />
+        <el-table-column prop="name" label="供应商" min-width="130" />
         <el-table-column prop="cost" label="费用(¥)" sortable align="right">
           <template #default="{ row }">¥{{ row.cost }}</template>
         </el-table-column>
@@ -149,7 +149,7 @@ export default {
       costTab: 'business',
       tabs: [
         { key: 'business', label: '按业务线' },
-        { key: 'provider', label: '按大模型公司' },
+        { key: 'provider', label: '按供应商' },
         { key: 'model', label: '按模型' },
       ],
     }
