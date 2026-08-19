@@ -313,6 +313,75 @@ const companyStats = companyNames.map((name, ci) => {
 })
 companyStats.sort((a, b) => b.cost - a.cost)
 
+// TokenLimit 配额网关示例：Team→业务线，User→产品，沿用本平台已有口径
+const tokenLimitDemo = {
+  gatewayUrl: 'https://llm-audit.example.com',
+  accessKey: 'tl_ak_8Kx2mNqP4rStUvWxYzAbCdEfGhIjKlMn',
+  stats: [
+    { label: '业务线 / Team', value: businessLines.length },
+    { label: '配额规则数', value: 9 },
+    { label: '产品 / User', value: products.length },
+    { label: 'API Key 数', value: 12 },
+    { label: '今日 Token', value: workbench.today.todayTokens },
+    { label: '今日调用', value: workbench.today.calls },
+  ],
+  costStats: [
+    { label: '今日费用(¥)', value: workbench.today.todayCost.toFixed(2) },
+    { label: '今日缓存命中率', value: '34.2%' },
+    { label: '今日缓存节省(¥)', value: '86.40', highlight: true },
+  ],
+  trend: workbench.trend7.map((d) => ({ date: d.date, value: d.tokens })),
+  topTeams: businessStats.slice(0, 5).map((b) => ({
+    name: b.name,
+    tokens: b.tokens,
+    calls: b.calls,
+    cost: b.cost,
+  })),
+  overview: {
+    productName: '犇犇Agent',
+    productId: 'p_benben',
+    quotaMode: 'PERSONAL_FIRST_THEN_TEAM',
+    businessName: '客户',
+    businessKey: 'customer',
+    personalQuota: 200000,
+    personalUsed: 164000,
+    teamQuota: 800,
+    teamUsed: 656,
+    teamLimitType: 'COST',
+  },
+  chain: [
+    {
+      key: 'team-balance',
+      title: '业务线余额',
+      tokenlimit: 'team-balance',
+      desc: '对应 TokenLimit 的团队预算池。客户业务线今日费用额度 ¥800，用完即拦。',
+    },
+    {
+      key: 'user-balance',
+      title: '产品额度',
+      tokenlimit: 'user-balance',
+      desc: '对应个人额度。犇犇Agent 每日 20 万 Token，不足时按「产品优先、业务线兜底」。',
+    },
+    {
+      key: 'usage-period',
+      title: '周期用量',
+      tokenlimit: 'usage-period',
+      desc: '按日 / 周 / 月的次数与 Token 上限。本次请求预估通过后才转发真实厂商。',
+    },
+  ],
+  quotaRules: [
+    { id: 1, ruleCode: 'Q-CUSTOMER-DAY-COST', targetType: 'TEAM', targetCode: 'customer', targetName: '客户', model: '', limitType: 'COST', limitValue: 800, used: 656, period: 'DAY', enabled: true, description: '客户业务线日费用硬限额' },
+    { id: 2, ruleCode: 'Q-FINANCE-MONTH-COST', targetType: 'TEAM', targetCode: 'finance', targetName: '财务', model: '', limitType: 'COST', limitValue: 12000, used: 6840, period: 'MONTH', enabled: true, description: '财务业务线月预算' },
+    { id: 3, ruleCode: 'Q-RD-MONTH-TOKEN', targetType: 'TEAM', targetCode: 'rd', targetName: '研发', model: '', limitType: 'TOKEN', limitValue: 8000000, used: 2100000, period: 'MONTH', enabled: true, description: '研发助手月 Token 池' },
+    { id: 4, ruleCode: 'Q-BENBEN-DAY-TOKEN', targetType: 'USER', targetCode: 'p_benben', targetName: '犇犇Agent', model: '', limitType: 'TOKEN', limitValue: 200000, used: 164000, period: 'DAY', enabled: true, description: '犇犇Agent 每日 Token' },
+    { id: 5, ruleCode: 'Q-VOC-DAY-REQ', targetType: 'USER', targetCode: 'p_voc', targetName: 'VOC评价', model: '', limitType: 'REQUEST_COUNT', limitValue: 3000, used: 2140, period: 'DAY', enabled: true, description: 'VOC 每日请求次数' },
+    { id: 6, ruleCode: 'Q-AIORDER-DAY-COST', targetType: 'USER', targetCode: 'p_aiorder', targetName: 'AI建单', model: 'doubao-lite', limitType: 'COST', limitValue: 120, used: 48, period: 'DAY', enabled: false, description: 'AI建单仅限豆包 Lite' },
+    { id: 7, ruleCode: 'Q-CONTENT-WEEK-TOKEN', targetType: 'USER', targetCode: 'p_content', targetName: '内容生成', model: '', limitType: 'TOKEN', limitValue: 1500000, used: 420000, period: 'WEEK', enabled: true, description: '内容生成周 Token' },
+    { id: 8, ruleCode: 'Q-OPS-HOUR-REQ', targetType: 'USER', targetCode: 'p_ops', targetName: '运营助手', model: '', limitType: 'REQUEST_COUNT', limitValue: 200, used: 36, period: 'HOUR', enabled: true, description: '运营助手每小时限次' },
+    { id: 9, ruleCode: 'Q-TIYAN-TOTAL-COST', targetType: 'USER', targetCode: 'p_tiyan', targetName: '体验罗盘', model: '', limitType: 'COST', limitValue: 5000, used: 1280, period: 'TOTAL', enabled: true, description: '体验罗盘长期费用封顶' },
+  ],
+}
+
 export {
   businessLines,
   products,
@@ -327,4 +396,5 @@ export {
   callLogs,
   costReport,
   companyStats,
+  tokenLimitDemo,
 }

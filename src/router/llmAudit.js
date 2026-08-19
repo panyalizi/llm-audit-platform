@@ -41,6 +41,12 @@ const llmAudit = [
         meta: { title: '审计中心' },
         component: () => import('@/views/llmAudit/pages/audit.vue'),
       },
+      {
+        path: 'tokenlimit',
+        name: 'llmAuditTokenLimit',
+        meta: { title: '配额网关' },
+        component: () => import('@/views/llmAudit/pages/tokenlimit.vue'),
+      },
     ],
   },
 ]

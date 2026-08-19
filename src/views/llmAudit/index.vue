@@ -51,11 +51,11 @@
 </template>
 
 <script>
-import { Odometer, TrendCharts, Document, Money, Guide, Search } from '@element-plus/icons-vue'
+import { Odometer, TrendCharts, Document, Money, Guide, Search, Coin } from '@element-plus/icons-vue'
 
 export default {
   name: 'llmAuditLayout',
-  components: { Odometer, TrendCharts, Document, Money, Guide, Search },
+  components: { Odometer, TrendCharts, Document, Money, Guide, Search, Coin },
   data() {
     return {
       navItems: [
@@ -65,6 +65,7 @@ export default {
         { path: '/llmAudit/cost', label: '成本中心', icon: 'Money' },
         { path: '/llmAudit/openRouter', label: 'OpenRouter治理', icon: 'Guide' },
         { path: '/llmAudit/audit', label: '审计中心', icon: 'Search' },
+        { path: '/llmAudit/tokenlimit', label: '配额网关', icon: 'Coin' },
       ],
     }
   },
