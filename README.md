@@ -21,6 +21,7 @@ npm run dev
 | `/llmAudit/cost` | 成本中心 | 预算、费用趋势、报表 |
 | `/llmAudit/openRouter` | OpenRouter治理 | 服务商健康度、路由策略、模型性价比 |
 | `/llmAudit/audit` | 审计中心 | 脱敏规则、审计检索、保留策略 |
+| `/llmAudit/providerModel` | 供应商模型管理 | 平台级统一收口：供应商接入、模型注册上下线、密钥托管、接入规范 |
 
 ## 技术栈
 

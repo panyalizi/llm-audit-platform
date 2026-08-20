@@ -382,6 +382,62 @@ const tokenLimitDemo = {
   ],
 }
 
+// 供应商模型管理（平台级统一收口）：供应商接入、模型注册上下线、密钥托管
+const providerModelDemo = {
+  stats: [
+    { label: '接入供应商', value: 7 },
+    { label: '在线模型', value: '9 / 12' },
+    { label: '待上线模型', value: 3 },
+    { label: '本月新接入', value: 4 },
+    { label: '待审核申请', value: 2 },
+    { label: '网关接入率', value: '100%' },
+  ],
+  providers: [
+    { key: 'baidu', name: '百度', color: '#2932E1', region: '中国大陆', baseUrl: 'https://qianfan.baidubce.com/v2', protocol: 'OpenAI 兼容', credential: 'sk-bd-****3f1a', credentialExpires: '2027-06-30', lastCheck: '08-20 10:24', latency: 480, successRate: 99.6, calls7d: 81243, balance: 3120, balanceWarn: false, status: 'online' },
+    { key: 'aliyun', name: '阿里云', color: '#FF6A00', region: '中国大陆', baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1', protocol: 'OpenAI 兼容', credential: 'sk-qs-****8c22', credentialExpires: '2026-11-15', lastCheck: '08-20 10:21', latency: 620, successRate: 99.2, calls7d: 58610, balance: 208.5, balanceWarn: true, status: 'warn' },
+    { key: 'bytedance', name: '字节豆包', color: '#325AB4', region: '中国大陆', baseUrl: 'https://ark.cn-beijing.volces.com/api/v3', protocol: 'OpenAI 兼容', credential: 'sk-vk-****02ab', credentialExpires: '2027-02-28', lastCheck: '08-20 10:25', latency: 410, successRate: 99.8, calls7d: 102480, balance: 15000, balanceWarn: false, status: 'online' },
+    { key: 'tencent', name: '腾讯混元', color: '#0052D9', region: '中国大陆', baseUrl: 'https://api.hunyuan.cloud.tencent.com/v1', protocol: 'OpenAI 兼容', credential: 'sk-hy-****77fe', credentialExpires: '2027-08-01', lastCheck: '08-20 10:20', latency: 580, successRate: 99.4, calls7d: 32850, balance: 6800, balanceWarn: false, status: 'online' },
+    { key: 'zhipu', name: '智谱GLM', color: '#3859FF', region: '中国大陆', baseUrl: 'https://open.bigmodel.cn/api/paas/v4', protocol: 'OpenAI 兼容', credential: 'sk-zp-****90e3', credentialExpires: '2026-09-30', lastCheck: '08-20 10:18', latency: 720, successRate: 99.1, calls7d: 21970, balance: 430, balanceWarn: true, status: 'warn' },
+    { key: 'moonshot', name: '月之暗面', color: '#171717', region: '中国大陆', baseUrl: 'https://api.moonshot.cn/v1', protocol: 'OpenAI 兼容', credential: 'sk-kk-****11d9', credentialExpires: '2026-12-12', lastCheck: '08-20 10:22', latency: 890, successRate: 99.5, calls7d: 9640, balance: 1260, balanceWarn: false, status: 'online' },
+    { key: 'deepseek', name: 'DeepSeek', color: '#4D6BFE', region: '中国大陆', baseUrl: 'https://api.deepseek.com/v1', protocol: 'OpenAI 兼容', credential: 'sk-ds-****5b77', credentialExpires: '2027-03-20', lastCheck: '08-20 10:23', latency: 360, successRate: 99.7, calls7d: 70500, balance: 9200, balanceWarn: false, status: 'online' },
+  ],
+  models: [
+    { key: 'ernie-4.0', name: '文心ERNIE 4.0', providerKey: 'baidu', apiType: 'chat', series: 'Pro', priceIn: 9, priceOut: 30, contextWindow: 128, maxOutput: 8, owner: '陈工', applyAt: '2026-07-02', status: 'online' },
+    { key: 'ernie-speed', name: '文心ERNIE Speed', providerKey: 'baidu', apiType: 'chat', series: 'Flash', priceIn: 0.8, priceOut: 2, contextWindow: 128, maxOutput: 8, owner: '陈工', applyAt: '2026-06-15', status: 'online' },
+    { key: 'qwen-max', name: '通义千问MAX', providerKey: 'aliyun', apiType: 'chat', series: 'Pro', priceIn: 9.5, priceOut: 28, contextWindow: 128, maxOutput: 8, owner: '李工', applyAt: '2026-06-20', status: 'online' },
+    { key: 'qwen-plus', name: '通义千问Plus', providerKey: 'aliyun', apiType: 'chat', series: 'Flash', priceIn: 2, priceOut: 8, contextWindow: 128, maxOutput: 8, owner: '李工', applyAt: '2026-05-08', status: 'online' },
+    { key: 'doubao-pro', name: '豆包Pro', providerKey: 'bytedance', apiType: 'chat', series: 'Pro', priceIn: 5, priceOut: 20, contextWindow: 256, maxOutput: 8, owner: '王工', applyAt: '2026-07-18', status: 'online' },
+    { key: 'doubao-lite', name: '豆包Lite', providerKey: 'bytedance', apiType: 'chat', series: 'Flash', priceIn: 0.3, priceOut: 0.6, contextWindow: 128, maxOutput: 8, owner: '王工', applyAt: '2026-04-28', status: 'online' },
+    { key: 'doubao-embedding', name: '豆包Embedding', providerKey: 'bytedance', apiType: 'embedding', series: 'Flash', priceIn: 0.1, priceOut: 0.1, contextWindow: 24, maxOutput: 2, owner: '王工', applyAt: '2026-08-19', status: 'pending' },
+    { key: 'hunyuan-turbo', name: '混元Turbo', providerKey: 'tencent', apiType: 'chat', series: 'Flash', priceIn: 4, priceOut: 12, contextWindow: 128, maxOutput: 8, owner: '赵工', applyAt: '2026-06-25', status: 'online' },
+    { key: 'glm-4', name: 'GLM-4', providerKey: 'zhipu', apiType: 'chat', series: 'Pro', priceIn: 2.5, priceOut: 15, contextWindow: 128, maxOutput: 8, owner: '陈工', applyAt: '2026-07-11', status: 'online' },
+    { key: 'glm-4v', name: 'GLM-4V', providerKey: 'zhipu', apiType: 'image', series: 'Flash', priceIn: 4, priceOut: 4, contextWindow: 128, maxOutput: 8, owner: '陈工', applyAt: '2026-03-30', status: 'offline' },
+    { key: 'kimi', name: 'Kimi', providerKey: 'moonshot', apiType: 'chat', series: 'Pro', priceIn: 12, priceOut: 12, contextWindow: 128, maxOutput: 16, owner: '钱工', applyAt: '2026-08-17', status: 'pending' },
+    { key: 'deepseek-chat', name: 'DeepSeek Chat', providerKey: 'deepseek', apiType: 'chat', series: 'Flash', priceIn: 0.5, priceOut: 2, contextWindow: 128, maxOutput: 8, owner: '孙工', applyAt: '2026-05-22', status: 'online' },
+  ],
+  reviews: [
+    { id: 1, applicant: '王工', modelKey: 'doubao-embedding', modelName: '豆包Embedding', providerName: '字节豆包', action: '接入上线', time: '08-19 16:40', status: 'pending' },
+    { id: 2, applicant: '钱工', modelKey: 'kimi', modelName: 'Kimi', providerName: '月之暗面', action: '接入上线', time: '08-17 11:05', status: 'pending' },
+    { id: 3, applicant: '李工', modelKey: 'qwen-max', modelName: '通义千问MAX', providerName: '阿里云', action: '提价维护', time: '08-12 09:30', status: 'approved' },
+    { id: 4, applicant: '陈工', modelKey: 'ernie-4.0', modelName: '文心ERNIE 4.0', providerName: '百度', action: '接入上线', time: '08-02 14:18', status: 'approved' },
+    { id: 5, applicant: '王工', modelKey: 'doubao-pro', modelName: '豆包Pro', providerName: '字节豆包', action: '接入上线', time: '07-29 10:52', status: 'approved' },
+  ],
+  onboard: [
+    { title: '提交接入申请', desc: '填写供应商 / 模型信息，选择协议类型（对话 / 向量 / 图像），说明用途与预估量级。' },
+    { title: '密钥托管', desc: '厂商密钥录入平台密钥库，明文不出网，客户端只拿产品级 Key。' },
+    { title: '接入统一网关', desc: '平台 /v1 统一收口，配额与审计在网关前置，产品侧 Base URL 一致、零改造。' },
+    { title: '灰度上线', desc: '小流量验证健康度与账单，确认无误后全量放开并纳入报表。' },
+  ],
+  accessSpec: [
+    { item: 'Base URL', spec: 'https://llm-audit.example.com/v1', note: '所有客户端统一指向平台网关' },
+    { item: '认证方式', spec: 'Bearer tl_ak_xxxxxxxx（产品 Key，非厂商密钥）', note: '由网关映射到真实供应商凭证' },
+    { item: '模型命名', spec: 'provider.model 前缀透传，如 deepseek-chat', note: '映射后台模型注册表' },
+    { item: '协议兼容', spec: 'OpenAI Chat Completions / Embeddings / Images', note: '厂商私有协议由网关适配层转换' },
+    { item: '配额前置', spec: '业务线→产品→周期用量责任链拦截', note: '对应配额网关页' },
+    { item: '可观测性', spec: '全量写入调用明细 + 审计中心', note: '账单统一到月底对账' },
+  ],
+}
+
 export {
   businessLines,
   products,
@@ -397,4 +453,5 @@ export {
   costReport,
   companyStats,
   tokenLimitDemo,
+  providerModelDemo,
 }
