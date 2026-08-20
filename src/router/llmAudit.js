@@ -47,6 +47,12 @@ const llmAudit = [
         meta: { title: '配额网关' },
         component: () => import('@/views/llmAudit/pages/tokenlimit.vue'),
       },
+      {
+        path: 'providerModel',
+        name: 'llmAuditProviderModel',
+        meta: { title: '供应商模型管理' },
+        component: () => import('@/views/llmAudit/pages/providerModel.vue'),
+      },
     ],
   },
 ]

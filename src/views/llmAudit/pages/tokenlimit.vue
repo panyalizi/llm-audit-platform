@@ -149,7 +149,7 @@
           <el-progress
             :percentage="teamPercent"
             :stroke-width="12"
-            :color="progressColor(teamPercent)"
+            :color="progressColor(teamPercent)"  
           />
           <p class="quota-note">对应成本中心「今日预算」：先拦再调用，而不是花完再看报表。</p>
         </div>
