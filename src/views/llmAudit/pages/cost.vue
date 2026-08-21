@@ -1,5 +1,52 @@
 <template>
   <div class="cost-page">
+    <!-- 两本账概览 -->
+    <div class="two-books-overview">
+      <div class="overview-card">
+        <div class="overview-header">
+          <div class="overview-title">运行时预估成本</div>
+          <div class="overview-subtitle">用于路由排序、预算、异常预警、日常经营观察</div>
+          <el-tag type="info" size="small">非财务最终口径</el-tag>
+        </div>
+        <div class="overview-content">
+          <div class="metric-item">
+            <div class="metric-label">今日预估费用</div>
+            <div class="metric-value">¥{{ report.budget.dailyUsed.toFixed(2) }}</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-label">本月预估费用</div>
+            <div class="metric-value">¥{{ fmtNum(report.budget.monthlyUsed) }}</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-label">预算使用率</div>
+            <div class="metric-value">{{ Math.round(report.budget.dailyPercent * 100) }}%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card">
+        <div class="overview-header">
+          <div class="overview-title">月度实际结算成本</div>
+          <div class="overview-subtitle">用于财务对账、产品损益、客户毛利、锁账报表</div>
+          <el-tag type="success" size="small">以供应商实际账单为准</el-tag>
+        </div>
+        <div class="overview-content">
+          <div class="metric-item">
+            <div class="metric-label">本月实际费用</div>
+            <div class="metric-value">¥{{ fmtNum(report.budget.monthlyUsed * 1.15) }}</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-label">账单匹配率</div>
+            <div class="metric-value">98.5%</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-label">分摊完成率</div>
+            <div class="metric-value">100%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 预算卡片 -->
     <div class="budget-grid">
       <div class="budget-card">
@@ -35,6 +82,34 @@
         </div>
         <div class="bc-value ok">¥{{ fmtNum(report.budget.monthly - report.budget.monthlyUsed) }}</div>
         <div class="bc-save-note">基于 Flash 系列替换 Pro 的降本策略测算</div>
+      </div>
+    </div>
+
+    <!-- 账单桶与分摊 -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">账单桶与分摊算法</span>
+        <span class="panel-sub">供应商账单按最细粒度分摊</span>
+      </div>
+      <div class="bill-bucket-info">
+        <div class="bucket-formula">
+          <div class="formula-title">分摊公式</div>
+          <div class="formula-content">
+            <div class="formula-item">
+              <div class="formula-label">实际成本(i, b) = 账单桶实付金额(b) × 有效 token(i, b) ÷ 全部有效 token(b)</div>
+            </div>
+          </div>
+        </div>
+        <div class="bucket-examples">
+          <div class="example-item">
+            <div class="example-title">账单桶维度</div>
+            <div class="example-content">账期 × provider × 供应商账号 × 模型 × 计费项目 × 价格时段</div>
+          </div>
+          <div class="example-item">
+            <div class="example-title">计费项目</div>
+            <div class="example-content">输入 token、输出 token、缓存 token、批量推理、推理费用等</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -198,6 +273,63 @@ export default {
   flex-direction: column;
   gap: 16px;
 }
+
+/* 两本账概览 */
+.two-books-overview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.overview-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  &-header {
+    margin-bottom: 16px;
+  }
+  &-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d2129;
+    margin-bottom: 4px;
+  }
+  &-subtitle {
+    font-size: 12px;
+    color: #86909c;
+    margin-bottom: 8px;
+  }
+}
+.overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f2f3f5;
+  &:last-child {
+    border-bottom: none;
+  }
+  .metric-label {
+    font-size: 14px;
+    color: #4e5969;
+  }
+  .metric-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d2129;
+  }
+}
+
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
 .budget-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -207,14 +339,78 @@ export default {
   background: #fff;
   border-radius: 10px;
   padding: 18px 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  .bc-head {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  &-head {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 13px;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  &-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1d2129;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  &-foot {
+    font-size: 12px;
     color: #86909c;
   }
+  &--save {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    .bc-value {
+      color: #0369a1;
+    }
+    .bc-save-note {
+      color: #0369a1;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+  }
+}
+
+/* 账单桶信息 */
+.bill-bucket-info {
+  padding: 16px 0;
+}
+.bucket-formula {
+  margin-bottom: 20px;
+  .formula-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2129;
+    margin-bottom: 8px;
+  }
+  .formula-content {
+    background: #f7f8fa;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 13px;
+    color: #4e5969;
+    line-height: 1.6;
+  }
+}
+.bucket-examples {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.example-item {
+  .example-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2129;
+    margin-bottom: 6px;
+  }
+  .example-content {
+    font-size: 12px;
+    color: #86909c;
+    line-height: 1.5;
+  }
+}
+.budget-card {
   .bc-value {
     font-size: 26px;
     font-weight: 700;

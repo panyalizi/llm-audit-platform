@@ -1,31 +1,85 @@
 <template>
   <div class="pm-page">
     <div class="pm-hero">
-      <div class="pm-hero-left">
-        <div class="pm-hero-kicker">设计示例 · 平台级统一收口</div>
-        <div class="pm-hero-title">供应商模型管理：一次接入，全平台复用</div>
-        <div class="pm-hero-desc">
-          供应商接入、模型注册、密钥托管、上下线审核统一在本页收口。
-          <b>产品不再关心用哪家厂商、走什么协议</b>，只面向网关的模型列表。
+        <div class="pm-hero-left">
+          <div class="pm-hero-kicker">模型档案管理</div>
+          <div class="pm-hero-title">供应商模型管理：一次接入，全平台复用</div>
+          <div class="pm-hero-desc">
+            供应商接入、模型注册、密钥托管、上下线审核统一在本页收口。
+            <b>产品不再关心用哪家厂商、走什么协议</b>，只面向网关的模型列表。
+          </div>
         </div>
-      </div>
       <div class="pm-hero-right">
-        <div class="ah-metric"><b>密钥不外泄</b><span>厂商凭证锁在密钥库，客户端只拿产品 Key</span></div>
-        <div class="ah-metric"><b>协议可适配</b><span>私有协议由网关适配层统一转换为 OpenAI 兼容</span></div>
+        <div class="ah-metric"><b>统一收口</b><span>所有产品统一调用网关，不直接接触厂商API</span></div>
+        <div class="ah-metric"><b>模型档案</b><span>模型能力卡、上下文窗口、价格时段、健康状态</span></div>
       </div>
     </div>
 
-    <div class="pm-tabs">
-      <div
-        v-for="t in tabs"
-        :key="t.key"
-        class="pm-tab"
-        :class="{ active: activeTab === t.key }"
-        @click="activeTab = t.key"
-      >
-        {{ t.label }}
+      <div class="pm-tabs">
+        <div
+          v-for="t in tabs"
+          :key="t.key"
+          class="pm-tab"
+          :class="{ active: activeTab === t.key }"
+          @click="activeTab = t.key"
+        >
+          {{ t.label }}
+        </div>
       </div>
-    </div>
+
+      <!-- 模型档案管理说明 -->
+      <div class="pm-intro" v-if="activeTab === 'overview'">
+        <div class="intro-card">
+          <div class="intro-title">模型档案管理</div>
+          <div class="intro-desc">
+            每个模型建立"模型能力卡"，包含provider、模型版本、模型执行类型、能力、上下文/输出上限、境内地域、限流、计价时段、账号资源、健康度和可回退关系。
+          </div>
+          <div class="intro-features">
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <i class="feature-icon">📊</i>
+              </div>
+              <div class="feature-content">
+                <div class="feature-title">能力卡管理</div>
+                <div class="feature-desc">模型类型、特征能力、上下文窗口、价格时段</div>
+                <div class="feature-details">
+                  <span class="feature-tag">模型档案</span>
+                  <span class="feature-tag">能力矩阵</span>
+                  <span class="feature-tag">价格策略</span>
+                </div>
+              </div>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon-wrapper security">
+                <i class="feature-icon">🔐</i>
+              </div>
+              <div class="feature-content">
+                <div class="feature-title">资源保护</div>
+                <div class="feature-desc">账号×模型并发/RPM/TPM、预算、熔断</div>
+                <div class="feature-details">
+                  <span class="feature-tag">并发控制</span>
+                  <span class="feature-tag">流量限制</span>
+                  <span class="feature-tag">预算保护</span>
+                </div>
+              </div>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon-wrapper version">
+                <i class="feature-icon">🔄</i>
+              </div>
+              <div class="feature-content">
+                <div class="feature-title">版本化策略</div>
+                <div class="feature-desc">模型版本、路由策略、灰度发布、回滚机制</div>
+                <div class="feature-details">
+                  <span class="feature-tag">版本管理</span>
+                  <span class="feature-tag">灰度发布</span>
+                  <span class="feature-tag">快速回滚</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <!-- ========== 总览 ========== -->
     <template v-if="activeTab === 'overview'">
@@ -38,7 +92,7 @@
 
       <div class="panel">
         <div class="panel-head">
-          <span class="panel-title">供应商健康度</span>
+          <span class="panel-title">供应商状态</span>
           <span class="panel-sub">成功率 ≥ 99.5% 且延迟 &lt; 600ms 为健康；余额低于阈值标黄</span>
         </div>
         <div class="pm-provider-grid">
@@ -748,5 +802,107 @@ export default {
   }
   strong { font-size: 13px; color: #1d2129; }
   p { margin: 4px 0 0; font-size: 12px; color: #86909c; line-height: 1.6; }
+}
+.pm-intro {
+  .intro-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  }
+  .intro-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .intro-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    opacity: 0.9;
+  }
+}
+.intro-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 32px;
+}
+.feature-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e6eb;
+  transition: all 0.3s ease;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+.feature-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+.feature-card .security .feature-icon-wrapper {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+.feature-card .version .feature-icon-wrapper {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+.feature-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.feature-content {
+  flex: 1;
+}
+.feature-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d2129;
+  margin-bottom: 8px;
+}
+.feature-desc {
+  font-size: 13px;
+  color: #4e5969;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.feature-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.feature-tag {
+  background: #f2f3f5;
+  color: #4e5969;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
 }
 </style>

@@ -24,7 +24,149 @@
       </div>
     </div>
 
-    <!-- 中部：趋势 + 业务成本结构 -->
+    <!-- 监控指标卡片 -->
+    <div class="monitor-grid">
+      <!-- 稳定性指标 -->
+      <div class="monitor-card">
+        <div class="monitor-card-header">
+          <div class="monitor-card-title">稳定性指标</div>
+          <div class="monitor-card-status">
+            <el-tag type="success" size="small">正常</el-tag>
+          </div>
+        </div>
+        <div class="monitor-grid-content">
+          <div class="monitor-item">
+            <div class="monitor-label">成功率</div>
+            <div class="monitor-value">{{ workbench.monitor.stability.successRate }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">重试率</div>
+            <div class="monitor-value">{{ workbench.monitor.stability.retryRate }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">降级率</div>
+            <div class="monitor-value">{{ workbench.monitor.stability.fallbackRate }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">错误率</div>
+            <div class="monitor-value">{{ workbench.monitor.stability.errorRate }}%</div>
+          </div>
+          <div class="monitor-latency">
+            <div class="monitor-latency-item">
+              <div class="monitor-label">P50延迟</div>
+              <div class="monitor-value">{{ workbench.monitor.stability.p50Latency }}ms</div>
+            </div>
+            <div class="monitor-latency-item">
+              <div class="monitor-label">P95延迟</div>
+              <div class="monitor-value">{{ workbench.monitor.stability.p95Latency }}ms</div>
+            </div>
+            <div class="monitor-latency-item">
+              <div class="monitor-label">P99延迟</div>
+              <div class="monitor-value">{{ workbench.monitor.stability.p99Latency }}ms</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 路由合规性 -->
+      <div class="monitor-card">
+        <div class="monitor-card-header">
+          <div class="monitor-card-title">路由合规性</div>
+          <div class="monitor-card-status">
+            <el-tag type="success" size="small">合规</el-tag>
+          </div>
+        </div>
+        <div class="monitor-grid-content">
+          <div class="monitor-item">
+            <div class="monitor-label">总调用量</div>
+            <div class="monitor-value">{{ fmtNum(workbench.monitor.routing.totalCalls) }}</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">合规调用量</div>
+            <div class="monitor-value">{{ fmtNum(workbench.monitor.routing.compliantCalls) }}</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">合规率</div>
+            <div class="monitor-value">{{ workbench.monitor.routing.complianceRate }}%</div>
+          </div>
+          <div class="monitor-violations" v-if="workbench.monitor.routing.violatedRoutes.length > 0">
+            <div class="monitor-label">违规路由</div>
+            <div class="violation-list">
+              <div v-for="violation in workbench.monitor.routing.violatedRoutes" :key="violation.route" class="violation-item">
+                <div class="violation-route">{{ violation.route }}</div>
+                <div class="violation-info">{{ violation.violation }} ({{ violation.count }}次)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 输出质量 -->
+      <div class="monitor-card">
+        <div class="monitor-card-header">
+          <div class="monitor-card-title">输出质量</div>
+          <div class="monitor-card-status">
+            <el-tag type="success" size="small">良好</el-tag>
+          </div>
+        </div>
+        <div class="monitor-grid-content">
+          <div class="monitor-item">
+            <div class="monitor-label">平均评分</div>
+            <div class="monitor-value">{{ workbench.monitor.quality.avgScore }}</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">满意度</div>
+            <div class="monitor-value">{{ workbench.monitor.quality.satisfaction }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">连贯性</div>
+            <div class="monitor-value">{{ workbench.monitor.quality.coherence }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">准确性</div>
+            <div class="monitor-value">{{ workbench.monitor.quality.accuracy }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">相关性</div>
+            <div class="monitor-value">{{ workbench.monitor.quality.relevance }}%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 实时监控 -->
+      <div class="monitor-card">
+        <div class="monitor-card-header">
+          <div class="monitor-card-title">实时监控</div>
+          <div class="monitor-card-status">
+            <el-tag type="info" size="small">运行中</el-tag>
+          </div>
+        </div>
+        <div class="monitor-grid-content">
+          <div class="monitor-item">
+            <div class="monitor-label">当前调用量</div>
+            <div class="monitor-value">{{ workbench.monitor.realtime.currentCalls }}</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">活跃用户</div>
+            <div class="monitor-value">{{ workbench.monitor.realtime.activeUsers }}</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">队列深度</div>
+            <div class="monitor-value">{{ workbench.monitor.realtime.queueDepth }}</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">系统负载</div>
+            <div class="monitor-value">{{ (workbench.monitor.realtime.systemLoad * 100).toFixed(0) }}%</div>
+          </div>
+          <div class="monitor-item">
+            <div class="monitor-label">缓存命中率</div>
+            <div class="monitor-value">{{ workbench.monitor.realtime.cacheHitRate }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中部：趋势分析 -->
     <div class="wb-row">
       <!-- 今日调用趋势(小时) -->
       <div class="panel wb-trend-panel">
@@ -50,45 +192,35 @@
         </div>
       </div>
 
-      <!-- 费用按业务线分布 -->
-      <div class="panel wb-split-panel">
+      <!-- 趋势分析 -->
+      <div class="panel wb-trend-analysis">
         <div class="panel-head">
-          <span class="panel-title">今日费用占比 · 业务层</span>
-          <el-button link type="primary" @click="$router.push('/llmAudit/usage')">详情</el-button>
+          <span class="panel-title">趋势分析</span>
+          <el-radio-group v-model="analysisType" size="small">
+            <el-radio-button label="latency">延迟趋势</el-radio-button>
+            <el-radio-button label="success">成功率</el-radio-button>
+            <el-radio-button label="errors">错误趋势</el-radio-button>
+          </el-radio-group>
         </div>
-        <div class="hbar-list">
-          <div v-for="item in workbench.costSplitByBusiness" :key="item.key" class="hbar-item">
-            <div class="hbar-meta">
-              <span>{{ item.name }}</span>
-              <span>{{ item.value }}%</span>
-            </div>
-            <div class="hbar-track">
-              <div class="hbar-fill" :style="{ width: item.value + '%', background: colorOf(item.key) }"></div>
-            </div>
+        <div class="trend-chart">
+          <div class="trend-line" v-if="analysisType === 'latency'">
+            <div class="trend-point" v-for="(v, i) in workbench.monitor.trends.latency" :key="i" :style="{ left: (i * 16.67) + '%', bottom: (v / 15 * 100) + '%' }"></div>
           </div>
+          <div class="trend-line" v-if="analysisType === 'success'">
+            <div class="trend-point" v-for="(v, i) in workbench.monitor.trends.success" :key="i" :style="{ left: (i * 16.67) + '%', bottom: ((100 - v) / 15 * 100) + '%' }"></div>
+          </div>
+          <div class="trend-line" v-if="analysisType === 'errors'">
+            <div class="trend-point" v-for="(v, i) in workbench.monitor.trends.errors" :key="i" :style="{ left: (i * 16.67) + '%', bottom: (v / 15 * 100) + '%' }"></div>
+          </div>
+        </div>
+        <div class="trend-axis">
+          <span>7天前</span><span>5天前</span><span>3天前</span><span>今天</span>
         </div>
       </div>
     </div>
 
-    <!-- 底部：模型热度 + 告警 + 周对比 -->
+    <!-- 底部：告警 + 周对比 -->
     <div class="wb-row wb-row-2">
-      <!-- 热门模型 -->
-      <div class="panel">
-        <div class="panel-head">
-          <span class="panel-title">今日热门模型</span>
-          <el-button link type="primary" @click="$router.push('/llmAudit/openRouter')">模型治理</el-button>
-        </div>
-        <el-table :data="workbench.hitModel" size="small">
-          <el-table-column label="模型" prop="name" min-width="130" />
-          <el-table-column label="调用量" width="90" align="right">
-            <template #default="{ row }">{{ fmtNum(row.calls) }}</template>
-          </el-table-column>
-          <el-table-column label="今日费用(¥)" width="110" align="right">
-            <template #default="{ row }">{{ row.cost }}</template>
-          </el-table-column>
-        </el-table>
-      </div>
-
       <!-- 实时告警 -->
       <div class="panel">
         <div class="panel-head">
@@ -120,6 +252,25 @@
           </div>
         </div>
       </div>
+
+      <!-- 费用按业务线分布 -->
+      <div class="panel wb-split-panel">
+        <div class="panel-head">
+          <span class="panel-title">今日费用占比 · 业务层</span>
+          <el-button link type="primary" @click="$router.push('/llmAudit/usage')">详情</el-button>
+        </div>
+        <div class="hbar-list">
+          <div v-for="item in workbench.costSplitByBusiness" :key="item.key" class="hbar-item">
+            <div class="hbar-meta">
+              <span>{{ item.name }}</span>
+              <span>{{ item.value }}%</span>
+            </div>
+            <div class="hbar-track">
+              <div class="hbar-fill" :style="{ width: item.value + '%', background: colorOf(item.key) }"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -134,6 +285,7 @@ export default {
       workbench,
       businessLines,
       trendType: 'calls',
+      analysisType: 'latency',
     }
   },
   computed: {
@@ -206,6 +358,140 @@ export default {
 }
 .wb-row-2 {
   grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* 监控指标网格 */
+.monitor-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.monitor-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  &-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2129;
+  }
+  &-status {
+    font-size: 12px;
+  }
+}
+.monitor-grid-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.monitor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .monitor-label {
+    font-size: 12px;
+    color: #86909c;
+  }
+  .monitor-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d2129;
+  }
+}
+.monitor-latency {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  .monitor-latency-item {
+    flex: 1;
+    .monitor-label {
+      font-size: 11px;
+      color: #86909c;
+      margin-bottom: 4px;
+    }
+    .monitor-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1d2129;
+    }
+  }
+}
+.monitor-violations {
+  .monitor-label {
+    font-size: 12px;
+    color: #86909c;
+    margin-bottom: 8px;
+  }
+  .violation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .violation-item {
+    padding: 6px 8px;
+    background: #f7f8fa;
+    border-radius: 4px;
+    border-left: 3px solid #ff7d00;
+  }
+  .violation-route {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1d2129;
+    margin-bottom: 2px;
+  }
+  .violation-info {
+    font-size: 11px;
+    color: #86909c;
+  }
+}
+
+/* 趋势分析 */
+.wb-trend-analysis {
+  .trend-chart {
+    height: 180px;
+    position: relative;
+    background: linear-gradient(180deg, #f7f8fa 0%, #f2f3f5 100%);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .trend-line {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
+  .trend-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4f7cff;
+    transform: translateX(-50%);
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, #4f7cff 0%, rgba(79, 124, 255, 0.3) 100%);
+    }
+  }
+  .trend-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #c9cdd4;
+  }
 }
 .panel {
   background: #fff;
