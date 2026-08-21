@@ -47,6 +47,37 @@ const apiTypes = [
   { key: 'audio', name: '音频(audio)' },
 ]
 
+// Model Profiles - 执行类型管理
+const modelProfiles = [
+  { key: 'fast', name: '快速响应', description: '优先速度，适合简单问答', color: '#52c41a', maxLatency: 1000 },
+  { key: 'standard', name: '标准质量', description: '均衡性能与质量', color: '#1890ff', maxLatency: 3000 },
+  { key: 'reasoning', name: '复杂推理', description: '复杂任务深度思考', color: '#722ed1', maxLatency: 10000 },
+  { key: 'long_context', name: '长文本处理', description: '支持超长上下文', color: '#fa8c16', maxLatency: 15000 },
+]
+
+// Constraint Modes - 约束模式
+const constraintModes = [
+  { key: 'none', name: '无约束', description: '无特殊限制' },
+  { key: 'safety', name: '安全合规', description: '内容安全过滤' },
+  { key: 'cost_control', name: '成本控制', description: '预算限制' },
+  { key: 'performance', name: '性能优先', description: '响应速度优先' },
+  { key: 'accuracy', name: '准确性优先', description: '结果质量优先' },
+]
+
+// Error Codes - 错误码映射
+const errorCodes = [
+  { code: 1001, name: '参数错误', level: 'error', description: '请求参数格式错误或缺失' },
+  { code: 1002, name: '认证失败', level: 'error', description: 'API密钥无效或过期' },
+  { code: 1003, name: '配额不足', level: 'warning', description: '调用次数或Token额度已用完' },
+  { code: 1004, name: '频率限制', level: 'warning', description: '调用频率超过限制' },
+  { code: 2001, name: '网络超时', level: 'error', description: '请求超时或网络异常' },
+  { code: 2002, name: '服务商错误', level: 'error', description: '上游服务商内部错误' },
+  { code: 2003, name: '内容过滤', level: 'warning', description: '内容违反安全策略' },
+  { code: 2004, name: '模型过载', level: 'warning', description: '模型服务过载' },
+  { code: 3001, name: '路由异常', level: 'error', description: '路由配置错误' },
+  { code: 3002, name: '降级失败', level: 'error', description: '降级模型调用失败' },
+]
+
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -83,6 +114,52 @@ function genTrendByWeek() {
   return list
 }
 
+// Workbench Monitoring - 工作台监控指标
+const workbenchMonitor = {
+  // 稳定性指标
+  stability: {
+    successRate: 99.12,
+    retryRate: 2.3,
+    fallbackRate: 1.8,
+    errorRate: 0.88,
+    p50Latency: 820,
+    p95Latency: 2100,
+    p99Latency: 4500,
+  },
+  // 路由合规性
+  routing: {
+    totalCalls: 11320,
+    compliantCalls: 11245,
+    complianceRate: 99.34,
+    violatedRoutes: [
+      { route: 'customer→baidu→ernie-4.0', violation: '超出预算限制', count: 12 },
+      { route: 'finance→aliyun→qwen-max', violation: '未使用指定模型', count: 8 },
+    ],
+  },
+  // 输出质量
+  quality: {
+    avgScore: 8.7,
+    satisfaction: 94.2,
+    coherence: 96.8,
+    accuracy: 98.1,
+    relevance: 95.6,
+  },
+  // 实时监控
+  realtime: {
+    currentCalls: 156,
+    activeUsers: 23,
+    queueDepth: 2,
+    systemLoad: 0.68,
+    cacheHitRate: 34.2,
+  },
+  // 趋势分析
+  trends: {
+    latency: [820, 780, 850, 920, 880, 950, 820],
+    success: [99.1, 99.3, 99.0, 99.2, 99.4, 99.1, 99.1],
+    errors: [12, 8, 15, 10, 7, 9, 10],
+  },
+}
+
 const workbench = {
   today: {
     calls: 11320,
@@ -114,6 +191,7 @@ const workbench = {
   ],
   trend7: genDailyTrend(7),
   trendByWeek: genTrendByWeek(),
+  monitor: workbenchMonitor,
 }
 
 const businessStats = businessLines.map((b) => {
@@ -187,48 +265,105 @@ apiStats.sort((a, b) => b.cost - a.cost)
 function genCallLogs(count) {
   const list = []
   const statuses = ['success', 'success', 'success', 'success', 'success', 'success', 'success', 'success', 'failed', 'rate_limited']
+  
   for (let i = 0; i < count; i++) {
     const product = products[rand(0, products.length - 1)]
     const business = businessLines.find((b) => b.key === product.businessKey)
     const model = models[rand(0, models.length - 1)]
     const provider = providers.find((x) => x.key === model.providerKey)
     const api = apiTypes[rand(0, apiTypes.length - 1)]
+    const profile = modelProfiles[rand(0, modelProfiles.length - 1)]
+    const constraint = constraintModes[rand(0, constraintModes.length - 1)]
+    
     const inTok = rand(500, 5000)
     const outTok = rand(300, 3000)
     const status = statuses[rand(0, statuses.length - 1)]
     const success = status === 'success'
-    const cost = ((inTok / 1000) * model.priceIn + (outTok / 1000) * model.priceOut) * 0.6
-    const ts = new Date(Date.now() - rand(0, 100) * 60000)
-    list.push({
+    
+    // 生成逻辑调用层（两层结构）
+    const logicalCall = {
       requestId: `req_${Date.now().toString(36)}${i}w${rand(0, 999)}`,
       traceId: `trace_abc${rand(1000, 9999)}def${rand(1000, 9999)}`,
-      productId: product.id,
-      productName: product.name,
-      callerProductId: `${product.id}_m${rand(1, 3)}`,
       tenantId: `t_${rand(1000, 9999)}`,
       businessId: business.key,
       businessName: business.name,
-      time: `${String(ts.getHours()).padStart(2, '0')}:${String(ts.getMinutes()).padStart(2, '0')}:${String(ts.getSeconds()).padStart(2, '0')}`,
-      date: `${ts.getFullYear()}-${String(ts.getMonth() + 1).padStart(2, '0')}-${String(ts.getDate()).padStart(2, '0')}`,
-      provider: provider.name,
-      providerKey: provider.key,
-      model: model.name,
-      modelKey: model.key,
-      series: model.series,
-      apiType: api.name,
-      inputTokens: inTok,
-      outputTokens: outTok,
-      totalTokens: inTok + outTok,
-      cost: Math.round(cost * 100) / 100,
-      latencyMs: rand(400, 9000),
-      status,
-      statusText: success ? '成功' : status === 'failed' ? '失败' : '限流',
-      prompt: `你可以帮我分析一下最近一周的客户满意度数据吗？重点关注退货相关的问题。`,
-      output: `基于最近一周的数据，客户满意度为 87.6%。其中退货类诉求占比 12.3%，主要集中在服饰类目物流时效问题……`,
-      errorInfo: success ? null : status === 'failed' ? { code: 2002, message: 'upstream error: provider 500' } : { code: 1004, message: 'rate limit exceeded, retry in 3s' },
-    })
+      productId: product.id,
+      productName: product.name,
+      callerProductId: `${product.id}_m${rand(1, 3)}`,
+      platform: 'llm-gateway',
+      product_id: product.id,
+      scenario_id: `scenario_${rand(1, 10)}`,
+      environment: status === 'success' ? 'production' : 'testing',
+      model_profile: profile.key,
+      constraint_mode: constraint.key,
+      execution_mode: ['fast', 'standard', 'reasoning'][rand(0, 2)],
+      fallback_mode: 'same_provider',
+      routing_policy: `policy_${rand(1, 5)}`,
+      total_cost: 0,
+      total_latency: 0,
+      attempt_count: 0,
+      final_status: status,
+      created_at: new Date(Date.now() - rand(0, 100) * 60000).toISOString(),
+    }
+    
+    // 生成模型尝试层（1-3次尝试）
+    const attemptCount = success ? 1 : rand(1, 3)
+    const attempts = []
+    let totalCost = 0
+    let totalLatency = 0
+    
+    for (let j = 0; j < attemptCount; j++) {
+      const attemptStatus = j === attemptCount - 1 ? status : (rand(0, 1) === 0 ? 'success' : 'rate_limited')
+      const attemptSuccess = attemptStatus === 'success'
+      
+      const cost = ((inTok / 1000) * model.priceIn + (outTok / 1000) * model.priceOut) * 0.6
+      const latency = rand(400, 9000)
+      
+      totalCost += cost
+      totalLatency += latency
+      
+      attempts.push({
+        attempt_id: `${logicalCall.requestId}_a${j + 1}`,
+        logical_call_id: logicalCall.requestId,
+        attempt_number: j + 1,
+        provider: provider.name,
+        providerKey: provider.key,
+        model: model.name,
+        modelKey: model.key,
+        series: model.series,
+        apiType: api.name,
+        inputTokens: inTok,
+        outputTokens: outTok,
+        totalTokens: inTok + outTok,
+        cost: Math.round(cost * 100) / 100,
+        latencyMs: latency,
+        status: attemptStatus,
+        statusText: attemptSuccess ? '成功' : attemptStatus === 'failed' ? '失败' : '限流',
+        prompt: `你可以帮我分析一下最近一周的客户满意度数据吗？重点关注退货相关的问题。`,
+        output: attemptSuccess ? `基于最近一周的数据，客户满意度为 87.6%。其中退货类诉求占比 12.3%，主要集中在服饰类目物流时效问题……` : null,
+        errorInfo: attemptSuccess ? null : { code: 2002, message: 'upstream error: provider 500' },
+        started_at: new Date(Date.now() - rand(0, 100) * 60000).toISOString(),
+        completed_at: new Date(Date.now() - rand(0, 100) * 60000).toISOString(),
+        is_final: j === attemptCount - 1,
+      })
+    }
+    
+    // 更新逻辑调用层信息
+    logicalCall.total_cost = Math.round(totalCost * 100) / 100
+    logicalCall.total_latency = totalLatency
+    logicalCall.attempt_count = attemptCount
+    
+    // 构建返回数据（保持向后兼容）
+    const finalData = {
+      ...logicalCall,
+      ...attempts[0], // 使用第一次尝试的信息作为主要显示
+      attempts: attempts,
+    }
+    
+    list.push(finalData)
   }
-  list.sort((a, b) => b.requestId > a.requestId ? -1 : 1)
+  
+  list.sort((a, b) => b.created_at > a.created_at ? -1 : 1)
   return list
 }
 
@@ -444,6 +579,9 @@ export {
   providers,
   models,
   apiTypes,
+  modelProfiles,
+  constraintModes,
+  errorCodes,
   workbench,
   businessStats,
   providerStats,
