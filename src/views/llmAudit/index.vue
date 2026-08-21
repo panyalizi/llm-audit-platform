@@ -5,7 +5,7 @@
       <div class="llm-audit-logo">
         <span class="llm-audit-logo-badge">AI</span>
         <div class="llm-audit-logo-text">
-          <strong>大模型调用审计</strong>
+          <strong>犇犇模型管理后台</strong>
           <span>Token · 成本 · 审计</span>
         </div>
       </div>
@@ -28,7 +28,7 @@
     <div class="llm-audit-main">
       <header class="llm-audit-header">
         <div class="llm-audit-breadcrumb">
-          <span>统一大模型API统计审计平台</span>
+          <span>犇犇模型管理后台</span>
           <i class="el-icon llm-audit-breadcrumb-sep">›</i>
           <span class="llm-audit-breadcrumb-current">{{ currentTitle }}</span>
         </div>
